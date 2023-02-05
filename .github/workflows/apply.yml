@@ -7,8 +7,8 @@ on:
       - master
 
 jobs:
-  tf_fmt:
-    name: Terraform plan
+  tf_apply:
+    name: Terraform apply
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repo
