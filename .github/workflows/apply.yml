@@ -32,7 +32,7 @@ jobs:
 
       - name: Terraform Apply
         id: apply
-        run: terraform apply -input=false -var="api_key=${{ secrets.NEWRELIC_API_KEY }}" -var="account_id=${{ vars.NEWRELIC_ACCOUNT_ID }}" -no-color
+        run: terraform apply -auto-approve -var="api_key=${{ secrets.NEWRELIC_API_KEY }}" -var="account_id=${{ vars.NEWRELIC_ACCOUNT_ID }}" -no-color
         env:
           NEWRELIC_API_KEY: ${{ secrets.NEWRELIC_API_KEY }}
           NEWRELIC_ACCOUNT_ID: ${{ vars.NEWRELIC_ACCOUNT_ID }}
