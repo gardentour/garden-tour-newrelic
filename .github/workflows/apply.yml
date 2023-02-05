@@ -1,0 +1,40 @@
+name: Terraform Apply
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+
+jobs:
+  tf_fmt:
+    name: Terraform plan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v3
+
+      - name: Terraform Setup
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_wrapper: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Init
+        id: init
+        run: terraform init -no-color
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: Terraform Apply
+        id: apply
+        run: terraform apply -input=false -var="api_key=${{ secrets.NEWRELIC_API_KEY }}" -var="account_id=${{ vars.NEWRELIC_ACCOUNT_ID }}" -no-color
+        env:
+          NEWRELIC_API_KEY: ${{ secrets.NEWRELIC_API_KEY }}
+          NEWRELIC_ACCOUNT_ID: ${{ vars.NEWRELIC_ACCOUNT_ID }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
